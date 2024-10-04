@@ -99,8 +99,8 @@ body {
     }
 
     .speed-limit-value {
-        width: 66vw; /* Adjust inner circle size */
-        height: 66vw; /* Maintain aspect ratio */
+        width: 69vw; /* Adjust inner circle size for mobile */
+        height: 69vw; /* Maintain aspect ratio */
         font-size: 40vw; /* Increased font size for mobile view */
     }
 
