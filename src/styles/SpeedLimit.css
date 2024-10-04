@@ -13,7 +13,7 @@ body {
     flex-direction: column; /* Stack elements vertically */
     justify-content: flex-start; /* Align items at the start (top) */
     align-items: center; /* Center items horizontally */
-    margin-top: 30px; /* Adjusted spacing from the top for mobile */
+    margin-top: 50px; /* Adjusted spacing from the top */
 }
 
 .outer-circle {
@@ -23,11 +23,9 @@ body {
     justify-content: center;
     background-color: #f5f5f5; /* Light gray background for the outer circle */
     border-radius: 50%;
-    width: 70vw;  /* Larger size for mobile view using viewport width */
-    height: 70vw; /* Larger size for mobile view using viewport height */
-    max-width: 260px; /* Ensure it doesn't grow too large */
-    max-height: 260px; /* Ensure it doesn't grow too large */
-    border: 6vw solid red; /* Adjust border size based on viewport for mobile */
+    width: 320px;  /* Size for outer circle */
+    height: 320px; /* Size for outer circle */
+    border: 20px solid red;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative; /* For inner circle positioning */
 }
@@ -39,16 +37,14 @@ body {
 }
 
 .speed-limit-value {
-    font-size: 28vw; /* Increased font size for speed limit */
+    font-size: 195px; /* Adjusted font size */
     font-weight: bold;
     color: black;
     position: absolute; /* Positioning for center alignment */
     background-color: white; /* White background inside the circle */
     border-radius: 50%; /* Ensure it remains circular */
-    width: 65vw; /* Slightly smaller than the outer circle for mobile */
-    height: 65vw; /* Slightly smaller than the outer circle for mobile */
-    max-width: 240px; /* Prevent too large sizes */
-    max-height: 240px; /* Prevent too large sizes */
+    width: 300px; /* Slightly smaller than the outer circle */
+    height: 300px; /* Slightly smaller than the outer circle */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,33 +52,9 @@ body {
 
 /* New styles for location details */
 .location-details {
-    margin-top: 15px; /* Space between circle and text for mobile */
+    margin-top: 20px; /* Space between circle and text */
     text-align: center; /* Center align the text */
-    font-size: 4.5vw; /* Responsive font size for mobile */
-    max-font-size: 16px; /* Cap the size at 16px for readability */
+    font-size: 18px; /* Adjust font size */
     color: black; /* Darker color for readability */
     padding: 0 10px; /* Add some horizontal padding */
-}
-
-/* Media queries for larger screens */
-@media (min-width: 768px) {
-    .speed-limit-container {
-        margin-top: 30px;
-    }
-
-    .outer-circle {
-        width: 320px; /* Fixed size for larger screens */
-        height: 320px;
-        border: 20px solid red;
-    }
-
-    .speed-limit-value {
-        font-size: 230px; /* Increased font size for larger screens */
-        width: 300px;
-        height: 300px;
-    }
-
-    .location-details {
-        font-size: 18px; /* Fixed font size for larger screens */
-    }
 }
