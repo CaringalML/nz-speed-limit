@@ -12,13 +12,33 @@ function SpeedLimit() {
     zip: "Unknown Zip Code"
   });
   const location = useCurrentLocation();
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    if (location.latitude && location.longitude) {
+    const handleOnlineStatus = () => {
+      setIsOnline(navigator.onLine);
+      if (navigator.onLine) {
+        setSpeedLimit(null); // Reset speedLimit when back online to fetch new data
+      }
+    };
+
+    window.addEventListener('online', handleOnlineStatus);
+    window.addEventListener('offline', handleOnlineStatus);
+
+    // Cleanup the event listeners on component unmount
+    return () => {
+      window.removeEventListener('online', handleOnlineStatus);
+      window.removeEventListener('offline', handleOnlineStatus);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (location.latitude && location.longitude && isOnline) {
       // Overpass API Query for Speed Limit
       const query = `[out:json];way(around:50,${location.latitude},${location.longitude})["maxspeed"];out;`;
       const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
 
+      // Fetch Speed Limit Data
       axios.get(overpassUrl)
         .then(response => {
           const data = response.data.elements;
@@ -35,7 +55,7 @@ function SpeedLimit() {
         })
         .catch(error => {
           console.error('Error fetching data from Overpass API:', error);
-          setSpeedLimit("Error fetching speed limit data.");
+          setSpeedLimit("Error fetching speed limit data."); // Error message
         });
 
       // Nominatim API for reverse geocoding
@@ -64,19 +84,29 @@ function SpeedLimit() {
             zip: "Error fetching zip code" 
           }));
         });
+    } else if (!isOnline) {
+      setSpeedLimit("No Internet Connection!"); // Set error message for offline status
     }
-  }, [location]);
+  }, [location, isOnline]);
+
+  // Determine if data is loading or has an error
+  const isLoading = speedLimit === null;
+  const isError = speedLimit && speedLimit.includes("Error");
 
   return (
     <div className="speed-limit-container">
       <div className="speed-limit-sign">
         <div className="outer-circle">
-          {speedLimit ? (
+          {isLoading ? (
+            <p className="loading-message">Fetching Speed Limit Data...</p>
+          ) : isError ? (
+            <p className="error-message">{speedLimit}</p> // Error message display
+          ) : isOnline ? (
             <div className="speed-limit-value">
               <p>{speedLimit}</p>
             </div>
           ) : (
-            <p className="loading-message">Fetching Speed Limit Data...</p> 
+            <p className="offline-message">{speedLimit}</p> // Display for no internet connection
           )}
         </div>
       </div>

@@ -1,4 +1,4 @@
-/* src/styles/SpeedLimit.css */
+/* General Styles */
 body {
     background-color: #f0f0f0; /* Light grey background for the whole website */
     margin: 0; /* Remove default margin */
@@ -23,7 +23,7 @@ body {
     justify-content: center;
     background-color: #f5f5f5; /* Light gray background for the outer circle */
     border-radius: 50%;
-    width: 320px;  /* Size for outer circle */
+    width: 320px; /* Size for outer circle */
     height: 320px; /* Size for outer circle */
     border: 20px solid red;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -59,9 +59,61 @@ body {
     padding: 0 10px; /* Add some horizontal padding */
 }
 
-/* Add this to your SpeedLimit.css file */
 .loading-message {
-    font-size: 24px; /* Adjust the font size as needed */
-    color: #555; /* Optional: Change color for better visibility */
+    font-size: 18px; /* Adjust font size */
+    color: black; /* Use a contrasting color */
     text-align: center; /* Center the text */
+}
+
+.error-message {
+    font-size: 20px; /* Adjust font size for the error message */
+    color: red; /* Red color for errors */
+    text-align: center; /* Center align the text */
+    margin: 20px 0; /* Add some margin for spacing */
+}
+
+/* Styles for offline message */
+.offline-message {
+    font-size: 20px; /* Adjust font size for the offline message */
+    color: orange; /* Orange color for offline status */
+    text-align: center; /* Center align the text */
+    margin: 20px 0; /* Add some margin for spacing */
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Add some padding for smaller screens */
+    }
+
+    .speed-limit-container {
+        margin-top: 20px; /* Adjust margin for smaller screens */
+        width: 100%; /* Make container responsive */
+        max-width: none; /* Remove max-width for mobile */
+    }
+
+    .outer-circle {
+        width: 75vw; /* Increased size for outer circle in mobile */
+        height: 75vw; /* Maintain aspect ratio */
+        border: 20px solid red; /* Thinner border for smaller screens */
+    }
+
+    .speed-limit-value {
+        width: 66vw; /* Adjust inner circle size */
+        height: 66vw; /* Maintain aspect ratio */
+        font-size: 40vw; /* Increased font size for mobile view */
+    }
+
+    .location-details {
+        font-size: 5vw; /* Adjust text size */
+    }
+}
+
+/* Additional styles for offline message */
+.offline-message {
+    color: red; /* or any color you prefer */
+    font-weight: bold;
+    font-size: 1.2em; /* Make the text larger */
+    text-align: center; /* Center the text */
+    margin-top: 20px; /* Add some space above */
 }
