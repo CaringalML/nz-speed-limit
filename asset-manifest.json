@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/nz-speed-limit/static/css/main.c30eeb8e.css",
+    "main.js": "/nz-speed-limit/static/js/main.fb9dee49.js",
+    "static/js/453.8b59d517.chunk.js": "/nz-speed-limit/static/js/453.8b59d517.chunk.js",
+    "index.html": "/nz-speed-limit/index.html",
+    "main.c30eeb8e.css.map": "/nz-speed-limit/static/css/main.c30eeb8e.css.map",
+    "main.fb9dee49.js.map": "/nz-speed-limit/static/js/main.fb9dee49.js.map",
+    "453.8b59d517.chunk.js.map": "/nz-speed-limit/static/js/453.8b59d517.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c30eeb8e.css",
+    "static/js/main.fb9dee49.js"
+  ]
+}
