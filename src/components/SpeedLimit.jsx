@@ -76,7 +76,7 @@ function SpeedLimit() {
               <p>{speedLimit}</p>
             </div>
           ) : (
-            <p>Loading...</p>
+            <p className="loading-message">Fetching Speed Limit Data...</p> 
           )}
         </div>
       </div>

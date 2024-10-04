@@ -58,3 +58,10 @@ body {
     color: black; /* Darker color for readability */
     padding: 0 10px; /* Add some horizontal padding */
 }
+
+/* Add this to your SpeedLimit.css file */
+.loading-message {
+    font-size: 24px; /* Adjust the font size as needed */
+    color: #555; /* Optional: Change color for better visibility */
+    text-align: center; /* Center the text */
+}
