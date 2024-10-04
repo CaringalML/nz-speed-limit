@@ -30,6 +30,8 @@ jobs:
 
       - run: npm ci
       - run: npm run build --if-present
+      - run: npm install gh-pages --save-dev
+
 
       - name: Deploy with gh-pages
         run: |
