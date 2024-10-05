@@ -8,6 +8,10 @@ body {
     height: 100vh; /* Full viewport height */
 }
 
+.background-light-red {
+    background-color: rgba(255, 99, 71, 0.5); /* Light red background with transparency */
+}
+
 .speed-limit-container {
     display: flex;
     flex-direction: column; /* Stack elements vertically */
@@ -37,7 +41,7 @@ body {
 }
 
 .speed-limit-value {
-    font-size: 195px; /* Adjusted font size */
+    font-size: 195px; /* Adjusted font size for speed value */
     font-weight: bold;
     color: black;
     position: absolute; /* Positioning for center alignment */
@@ -48,6 +52,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* New styles for the unit of speed */
+.speed-limit-unit {
+    font-size: 10px; /* Smaller font size for "km/h" */
+    font-weight: normal; /* Normal weight for the unit */
+    color: black; /* Color for the unit */
+    margin-top: 10px; /* Space above the unit */
 }
 
 /* New styles for location details */
@@ -80,6 +92,45 @@ body {
     margin: 20px 0; /* Add some margin for spacing */
 }
 
+/* Current Speed Styles */
+.current-speed {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align to the start */
+    margin-top: 20px; /* Space above current speed section */
+    text-align: left; /* Align text to the left */
+}
+
+.current-speed p {
+    margin: 0; /* Remove default margins */
+}
+
+
+.current-speed-value {
+    font-size: 80px; /* Keep current speed value size */
+    font-weight: bold; /* Make the current speed bold */
+    color: black; /* Color for current speed */
+}
+
+/* New class for the current speed unit */
+.current-speed-unit {
+    font-size: 30px; /* Font size for "km/h" */
+    font-weight: normal; /* Normal weight for the unit */
+    color: black; /* Color for the unit */
+    margin-top: 5px; /* Space above the unit */
+    display: block; /* Make it a block element to stack below the value */
+}
+
+
+/* Slow Down Message */
+.slow-down-message {
+    font-size: 50px; /* Font size for the slow down message */
+    color: red; /* Red color for visibility */
+    font-weight: bold; /* Bold text */
+    margin-top: 20px; /* Adjust this value to move the text down */
+    margin-bottom: 20px; /* Adjust this value to move the text up */
+}
+
 /* Mobile Specific Styles */
 @media (max-width: 600px) {
     body {
@@ -106,6 +157,11 @@ body {
 
     .location-details {
         font-size: 5vw; /* Adjust text size */
+    }
+
+    .speed-limit-unit {
+        font-size: 8vw; /* Responsive unit size for mobile */
+        margin-top: 5px; /* Space for mobile */
     }
 }
 

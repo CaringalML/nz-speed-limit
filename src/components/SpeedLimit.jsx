@@ -15,9 +15,7 @@ function SpeedLimit() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Toggle this flag to enable/disable test code
-  // const useTestSpeed = true; // Set to true to use test speed
   const useTestSpeed = false; // Set to false to use actual speed
-
 
   useEffect(() => {
     const handleOnlineStatus = () => {
@@ -101,11 +99,23 @@ function SpeedLimit() {
   // Test speed code
   let currentSpeed = location.speed; // Use current speed from useCurrentLocation
   if (useTestSpeed) {
-    // Uncomment the following line to use a test speed
     currentSpeed = 55; // Hardcoded speed for testing
   }
 
   const maxSpeed = speedLimit ? parseInt(speedLimit) : 0; // Parse speed limit as integer
+
+  // Determine background color based on speed
+  const backgroundColor = currentSpeed > maxSpeed ? '#ffcccc' : '#f0f0f0'; // Light red if exceeding speed limit, else light grey
+
+  // Apply the background color to the body element
+  useEffect(() => {
+    document.body.style.backgroundColor = backgroundColor;
+
+    // Cleanup function to reset background color on unmount
+    return () => {
+      document.body.style.backgroundColor = ''; // Reset to default
+    };
+  }, [backgroundColor]);
 
   return (
     <div className="speed-limit-container">
@@ -118,9 +128,6 @@ function SpeedLimit() {
           ) : isOnline ? (
             <div className="speed-limit-value">
               <p>{speedLimit}</p>
-              {currentSpeed > maxSpeed && (
-                <p className="slow-down-message">Slow Down!</p> // Display warning if exceeding speed limit
-              )}
             </div>
           ) : (
             <p className="offline-message">{speedLimit}</p> // Display for no internet connection
@@ -131,7 +138,15 @@ function SpeedLimit() {
         <p>Road/Street: {locationDetails.road}</p>
         <p>Suburb: {locationDetails.suburb}</p>
         <p>City: {locationDetails.city}, {locationDetails.zip}</p>
-        <p>Current Speed: {currentSpeed} km/h</p> {/* Display the current speed */}
+        <div className="current-speed">
+          {currentSpeed <= maxSpeed ? (
+            <p className="current-speed-value">
+              {currentSpeed} <span className="current-speed-unit">km/h</span> {/* Smaller unit display */}
+            </p> // Display the current speed if within limit
+          ) : (
+            <p className="slow-down-message">Slow Down!</p> // Display warning if exceeding speed limit
+          )}
+        </div>
       </div>
     </div>
   );
