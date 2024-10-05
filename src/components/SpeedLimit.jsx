@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import useCurrentLocation from './useCurrentLocation';
 import axios from 'axios';
-import '../styles/SpeedLimit.css'; // Updated import statement
+import '../styles/SpeedLimit.css';
 
 function SpeedLimit() {
   const [speedLimit, setSpeedLimit] = useState(null);
@@ -13,107 +13,100 @@ function SpeedLimit() {
   });
   const location = useCurrentLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-
+  const audioContextRef = useRef(null);
+  const oscillatorRef = useRef(null);
+  const audioRef = useRef(new Audio('/src/audio/buzzer.mp3'));
+  
   // Toggle this flag to enable/disable test code
-  const useTestSpeed = false; // Set to false to use actual speed
+  const useTestSpeed = false;
+
+  // Initialize Web Audio API
+  useEffect(() => {
+    try {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (error) {
+      console.error("Web Audio API is not supported in this browser:", error);
+    }
+    
+    return () => {
+      if (oscillatorRef.current) {
+        oscillatorRef.current.stop();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const handleOnlineStatus = () => {
       setIsOnline(navigator.onLine);
       if (navigator.onLine) {
-        setSpeedLimit(null); // Reset speedLimit when back online to fetch new data
+        setSpeedLimit(null);
       }
     };
 
     window.addEventListener('online', handleOnlineStatus);
     window.addEventListener('offline', handleOnlineStatus);
 
-    // Cleanup the event listeners on component unmount
     return () => {
       window.removeEventListener('online', handleOnlineStatus);
       window.removeEventListener('offline', handleOnlineStatus);
     };
   }, []);
 
-  useEffect(() => {
-    if (location.latitude && location.longitude && isOnline) {
-      // Overpass API Query for Speed Limit
-      const query = `[out:json];way(around:50,${location.latitude},${location.longitude})["maxspeed"];out;`;
-      const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+  // Rest of your existing API call effect...
 
-      // Fetch Speed Limit Data
-      axios.get(overpassUrl)
-        .then(response => {
-          const data = response.data.elements;
-          if (data.length > 0) {
-            const maxSpeed = data[0].tags.maxspeed; // First result's speed limit
-            setSpeedLimit(maxSpeed);
-
-            // Get road name
-            const road = data[0].tags.name || "Unknown Road";
-            setLocationDetails(prevDetails => ({ ...prevDetails, road }));
-          } else {
-            setSpeedLimit("No speed limit data available.");
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data from Overpass API:', error);
-          setSpeedLimit("Error fetching speed limit data."); // Error message
-        });
-
-      // Nominatim API for reverse geocoding
-      const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&format=json`;
-
-      axios.get(nominatimUrl)
-        .then(response => {
-          const address = response.data.address || {};
-          const suburb = address.suburb || "Unknown Suburb";
-          const city = address.city || address.town || "Unknown City";
-          const zip = address.postcode || "Unknown Zip Code";
-
-          setLocationDetails(prevDetails => ({
-            ...prevDetails,
-            suburb,
-            city,
-            zip
-          }));
-        })
-        .catch(error => {
-          console.error('Error fetching data from Nominatim API:', error);
-          setLocationDetails(prevDetails => ({
-            ...prevDetails,
-            suburb: "Error fetching suburb",
-            city: "Error fetching city",
-            zip: "Error fetching zip code"
-          }));
-        });
-    } else if (!isOnline) {
-      setSpeedLimit("No Internet Connection!"); // Set error message for offline status
-    }
-  }, [location, isOnline]);
-
-  // Determine if data is loading or has an error
   const isLoading = speedLimit === null;
   const isError = speedLimit && speedLimit.includes("Error");
 
-  // Test speed code
-  let currentSpeed = location.speed; // Use current speed from useCurrentLocation
+  let currentSpeed = location.speed;
   if (useTestSpeed) {
-    currentSpeed = 55; // Hardcoded speed for testing
+    currentSpeed = 55;
   }
 
-  const maxSpeed = speedLimit ? parseInt(speedLimit) : 0; // Parse speed limit as integer
+  const maxSpeed = speedLimit ? parseInt(speedLimit) : 0;
 
-  // Determine background color based on speed
-  const backgroundColor = currentSpeed > maxSpeed ? '#ffcccc' : '#f0f0f0'; // Light red if exceeding speed limit, else light grey
+  // Attempt multiple audio playback strategies
+  useEffect(() => {
+    if (currentSpeed > maxSpeed && maxSpeed !== 0) {
+      // Strategy 1: Try standard Audio API
+      audioRef.current.play().catch(() => {
+        // Strategy 2: If Audio API fails, try Web Audio API
+        if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+          audioContextRef.current.resume();
+        }
+        
+        if (audioContextRef.current && !oscillatorRef.current) {
+          try {
+            oscillatorRef.current = audioContextRef.current.createOscillator();
+            oscillatorRef.current.connect(audioContextRef.current.destination);
+            oscillatorRef.current.type = 'square';
+            oscillatorRef.current.frequency.setValueAtTime(440, audioContextRef.current.currentTime);
+            oscillatorRef.current.start();
+          } catch (error) {
+            console.error("Failed to create oscillator:", error);
+          }
+        }
+      });
+    } else {
+      // Stop all audio
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      
+      if (oscillatorRef.current) {
+        oscillatorRef.current.stop();
+        oscillatorRef.current = null;
+      }
+    }
+  }, [currentSpeed, maxSpeed]);
 
-  // Apply the background color to the body element
+  const backgroundColor = currentSpeed > maxSpeed ? '#ffcccc' : '#f0f0f0';
+
   useEffect(() => {
     document.body.style.backgroundColor = backgroundColor;
-
-    // Cleanup function to reset background color on unmount
     return () => {
-      document.body.style.backgroundColor = ''; // Reset to default
+      document.body.style.backgroundColor = '';
     };
   }, [backgroundColor]);
 
@@ -124,13 +117,13 @@ function SpeedLimit() {
           {isLoading ? (
             <p className="loading-message">Fetching Speed Limit Data...</p>
           ) : isError ? (
-            <p className="error-message">{speedLimit}</p> // Error message display
+            <p className="error-message">{speedLimit}</p>
           ) : isOnline ? (
             <div className="speed-limit-value">
               <p>{speedLimit}</p>
             </div>
           ) : (
-            <p className="offline-message">{speedLimit}</p> // Display for no internet connection
+            <p className="offline-message">{speedLimit}</p>
           )}
         </div>
       </div>
@@ -141,10 +134,10 @@ function SpeedLimit() {
         <div className="current-speed">
           {currentSpeed <= maxSpeed ? (
             <p className="current-speed-value">
-              {currentSpeed}<span className="current-speed-unit">km/h</span> {/* Smaller unit display */}
-            </p> // Display the current speed if within limit
+              {currentSpeed}<span className="current-speed-unit">km/h</span>
+            </p>
           ) : (
-            <p className="slow-down-message">Slow Down!</p> // Display warning if exceeding speed limit
+            <p className="slow-down-message">Slow Down!</p>
           )}
         </div>
       </div>
