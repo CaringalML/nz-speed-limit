@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import useCurrentLocation from './useCurrentLocation';
-import axios from 'axios';
+// import axios from 'axios';
 import '../styles/SpeedLimit.css';
 
 function SpeedLimit() {
