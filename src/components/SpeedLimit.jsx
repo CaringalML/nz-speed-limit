@@ -13,30 +13,9 @@ function SpeedLimit() {
   });
   const location = useCurrentLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const audioContextRef = useRef(null);
-  const oscillatorRef = useRef(null);
-  const audioRef = useRef(new Audio('/src/audio/buzzer.mp3'));
-  
-  // Toggle this flag to enable/disable test code
-  const useTestSpeed = false;
 
-  // Initialize Web Audio API
-  useEffect(() => {
-    try {
-      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-    } catch (error) {
-      console.error("Web Audio API is not supported in this browser:", error);
-    }
-    
-    return () => {
-      if (oscillatorRef.current) {
-        oscillatorRef.current.stop();
-      }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-    };
-  }, []);
+  // Toggle this flag to enable/disable test code
+  const useTestSpeed = false; // Set to false to use actual speed
 
   useEffect(() => {
     const handleOnlineStatus = () => {
