@@ -59,7 +59,8 @@ body {
     font-size: 10px; /* Smaller font size for "km/h" */
     font-weight: normal; /* Normal weight for the unit */
     color: black; /* Color for the unit */
-    margin-top: 10px; /* Space above the unit */
+    margin-left: 5px; /* Space between value and unit */
+    display: inline-block; /* Keep it inline to be next to the value */
 }
 
 /* New styles for location details */
@@ -96,20 +97,20 @@ body {
 .current-speed {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align to the start */
+    align-items: center; /* Center align the items */
     margin-top: 20px; /* Space above current speed section */
-    text-align: left; /* Align text to the left */
+    text-align: center; /* Align text to center */
 }
 
 .current-speed p {
     margin: 0; /* Remove default margins */
 }
 
-
 .current-speed-value {
     font-size: 80px; /* Keep current speed value size */
     font-weight: bold; /* Make the current speed bold */
     color: black; /* Color for current speed */
+    display: inline; /* Keep it inline to be next to the unit */
 }
 
 /* New class for the current speed unit */
@@ -117,10 +118,9 @@ body {
     font-size: 30px; /* Font size for "km/h" */
     font-weight: normal; /* Normal weight for the unit */
     color: black; /* Color for the unit */
-    margin-top: 5px; /* Space above the unit */
-    display: block; /* Make it a block element to stack below the value */
+    margin-left: 5px; /* Space between value and unit */
+    display: inline; /* Keep it inline */
 }
-
 
 /* Slow Down Message */
 .slow-down-message {
@@ -161,7 +161,7 @@ body {
 
     .speed-limit-unit {
         font-size: 8vw; /* Responsive unit size for mobile */
-        margin-top: 5px; /* Space for mobile */
+        margin-left: 5px; /* Space for mobile */
     }
 }
 
