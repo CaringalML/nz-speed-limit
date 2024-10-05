@@ -141,7 +141,7 @@ function SpeedLimit() {
         <div className="current-speed">
           {currentSpeed <= maxSpeed ? (
             <p className="current-speed-value">
-              {currentSpeed} <span className="current-speed-unit">km/h</span> {/* Smaller unit display */}
+              {currentSpeed}<span className="current-speed-unit">km/h</span> {/* Smaller unit display */}
             </p> // Display the current speed if within limit
           ) : (
             <p className="slow-down-message">Slow Down!</p> // Display warning if exceeding speed limit
