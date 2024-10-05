@@ -13,8 +13,6 @@ function SpeedLimit() {
   });
   const location = useCurrentLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [currentSpeed, setCurrentSpeed] = useState(null); // State to store current speed
-  const [speedMessage, setSpeedMessage] = useState(""); // State for speed message
 
   useEffect(() => {
     const handleOnlineStatus = () => {
@@ -46,7 +44,7 @@ function SpeedLimit() {
           const data = response.data.elements;
           if (data.length > 0) {
             const maxSpeed = data[0].tags.maxspeed; // First result's speed limit
-            setSpeedLimit(parseInt(maxSpeed, 10)); // Convert to integer for comparison
+            setSpeedLimit(maxSpeed);
 
             // Get road name
             const road = data[0].tags.name || "Unknown Road";
@@ -91,23 +89,9 @@ function SpeedLimit() {
     }
   }, [location, isOnline]);
 
-  useEffect(() => {
-    if (speedLimit !== null && currentSpeed !== null) {
-      if (typeof speedLimit === "number") {
-        if (currentSpeed > speedLimit) {
-          setSpeedMessage("Slow down!");
-        } else if (currentSpeed <= speedLimit - 6) {
-          setSpeedMessage("Too slow!");
-        } else {
-          setSpeedMessage(""); // Reset message if speed is within limits
-        }
-      }
-    }
-  }, [speedLimit, currentSpeed]); // Add currentSpeed to dependency array
-
   // Determine if data is loading or has an error
   const isLoading = speedLimit === null;
-  const isError = speedLimit && typeof speedLimit === "string";
+  const isError = speedLimit && speedLimit.includes("Error");
 
   return (
     <div className="speed-limit-container">
@@ -120,7 +104,6 @@ function SpeedLimit() {
           ) : isOnline ? (
             <div className="speed-limit-value">
               <p>{speedLimit}</p>
-              {speedMessage && <p className="speed-warning">{speedMessage}</p>} {/* Display speed message */}
             </div>
           ) : (
             <p className="offline-message">{speedLimit}</p> // Display for no internet connection
@@ -131,7 +114,7 @@ function SpeedLimit() {
         <p>Road/Street: {locationDetails.road}</p>
         <p>Suburb: {locationDetails.suburb}</p>
         <p>City: {locationDetails.city}, {locationDetails.zip}</p>
-        <p>Current Speed: {currentSpeed !== null ? `${currentSpeed} km/h` : "Speed data unavailable"}</p>
+        <p>Current Speed: {location.speed !== null ? `${location.speed} km/h` : "Speed data unavailable"}</p>
       </div>
     </div>
   );
