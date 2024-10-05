@@ -14,7 +14,7 @@ function SpeedLimit() {
   const location = useCurrentLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // Toggle this flag to enable/disable test codess
+  // Toggle this flag to enable/disable test codesss
   const useTestSpeed = false; // Set to false to use actual speed
 
   useEffect(() => {
