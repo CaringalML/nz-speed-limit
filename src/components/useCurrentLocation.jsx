@@ -18,7 +18,7 @@ function useCurrentLocation() {
         setLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          speed: position.coords.speed ? (position.coords.speed * 3.6).toFixed(2) : null // Convert from m/s to km/h
+          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null // Convert from m/s to km/h and round to integer
         });
       },
       (error) => console.error("Error fetching location:", error),
