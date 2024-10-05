@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/nz-speed-limit/static/css/main.33de7093.css",
-    "main.js": "/nz-speed-limit/static/js/main.ea126fca.js",
+    "main.js": "/nz-speed-limit/static/js/main.81c54707.js",
     "static/js/453.8b59d517.chunk.js": "/nz-speed-limit/static/js/453.8b59d517.chunk.js",
     "index.html": "/nz-speed-limit/index.html",
     "main.33de7093.css.map": "/nz-speed-limit/static/css/main.33de7093.css.map",
-    "main.ea126fca.js.map": "/nz-speed-limit/static/js/main.ea126fca.js.map",
+    "main.81c54707.js.map": "/nz-speed-limit/static/js/main.81c54707.js.map",
     "453.8b59d517.chunk.js.map": "/nz-speed-limit/static/js/453.8b59d517.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.33de7093.css",
-    "static/js/main.ea126fca.js"
+    "static/js/main.81c54707.js"
   ]
 }
