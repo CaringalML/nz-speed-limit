@@ -14,6 +14,11 @@ function SpeedLimit() {
   const location = useCurrentLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
+  // Toggle this flag to enable/disable test code
+  // const useTestSpeed = true; // Set to true to use test speed
+  const useTestSpeed = false; // Set to false to use actual speed
+
+
   useEffect(() => {
     const handleOnlineStatus = () => {
       setIsOnline(navigator.onLine);
@@ -68,20 +73,20 @@ function SpeedLimit() {
           const city = address.city || address.town || "Unknown City";
           const zip = address.postcode || "Unknown Zip Code";
 
-          setLocationDetails(prevDetails => ({ 
-            ...prevDetails, 
-            suburb, 
-            city, 
-            zip 
+          setLocationDetails(prevDetails => ({
+            ...prevDetails,
+            suburb,
+            city,
+            zip
           }));
         })
         .catch(error => {
           console.error('Error fetching data from Nominatim API:', error);
-          setLocationDetails(prevDetails => ({ 
-            ...prevDetails, 
-            suburb: "Error fetching suburb", 
-            city: "Error fetching city", 
-            zip: "Error fetching zip code" 
+          setLocationDetails(prevDetails => ({
+            ...prevDetails,
+            suburb: "Error fetching suburb",
+            city: "Error fetching city",
+            zip: "Error fetching zip code"
           }));
         });
     } else if (!isOnline) {
@@ -92,6 +97,15 @@ function SpeedLimit() {
   // Determine if data is loading or has an error
   const isLoading = speedLimit === null;
   const isError = speedLimit && speedLimit.includes("Error");
+
+  // Test speed code
+  let currentSpeed = location.speed; // Use current speed from useCurrentLocation
+  if (useTestSpeed) {
+    // Uncomment the following line to use a test speed
+    currentSpeed = 55; // Hardcoded speed for testing
+  }
+
+  const maxSpeed = speedLimit ? parseInt(speedLimit) : 0; // Parse speed limit as integer
 
   return (
     <div className="speed-limit-container">
@@ -104,6 +118,9 @@ function SpeedLimit() {
           ) : isOnline ? (
             <div className="speed-limit-value">
               <p>{speedLimit}</p>
+              {currentSpeed > maxSpeed && (
+                <p className="slow-down-message">Slow Down!</p> // Display warning if exceeding speed limit
+              )}
             </div>
           ) : (
             <p className="offline-message">{speedLimit}</p> // Display for no internet connection
@@ -114,7 +131,7 @@ function SpeedLimit() {
         <p>Road/Street: {locationDetails.road}</p>
         <p>Suburb: {locationDetails.suburb}</p>
         <p>City: {locationDetails.city}, {locationDetails.zip}</p>
-        <p>Current Speed: {location.speed !== null ? `${location.speed} km/h` : "Speed data unavailable"}</p>
+        <p>Current Speed: {currentSpeed} km/h</p> {/* Display the current speed */}
       </div>
     </div>
   );
