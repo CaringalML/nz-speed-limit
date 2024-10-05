@@ -5,7 +5,7 @@ import '../styles/SpeedLimit.css';
 
 function SpeedLimit() {
   const [speedLimit, setSpeedLimit] = useState(null);
-  const [locationDetails, setLocationDetails] = useState({
+  const [locationDetails] = useState({
     road: "Unknown Road",
     suburb: "Unknown Suburb",
     city: "Unknown City",
