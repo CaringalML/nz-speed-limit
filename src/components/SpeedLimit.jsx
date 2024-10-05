@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useCurrentLocation from './useCurrentLocation';
 import axios from 'axios';
+import buzzerSoundFile from '../audio/buzzer.mp3'; // Importing audio file
 import '../styles/SpeedLimit.css'; // Updated import statement
 
 function SpeedLimit() {
@@ -13,9 +14,13 @@ function SpeedLimit() {
   });
   const location = useCurrentLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isBuzzerPlaying, setIsBuzzerPlaying] = useState(false); // Track if buzzer is playing
+
+  // Audio object for the buzzer sound
+  const buzzerSound = new Audio(buzzerSoundFile);
 
   // Toggle this flag to enable/disable test code
-  const useTestSpeed = false; // Set to false to use actual speed
+  const useTestSpeed = true; // Set to false to use actual speed
 
   useEffect(() => {
     const handleOnlineStatus = () => {
@@ -103,6 +108,19 @@ function SpeedLimit() {
   }
 
   const maxSpeed = speedLimit ? parseInt(speedLimit) : 0; // Parse speed limit as integer
+
+  // Play buzzer sound if current speed exceeds the speed limit and stop if within limit
+  useEffect(() => {
+    if (currentSpeed > maxSpeed && !isBuzzerPlaying) {
+      buzzerSound.loop = true; // Loop the buzzer sound
+      buzzerSound.play().catch(error => console.error('Failed to play sound:', error));
+      setIsBuzzerPlaying(true); // Set buzzer playing to true
+    } else if (currentSpeed <= maxSpeed && isBuzzerPlaying) {
+      buzzerSound.pause(); // Stop the buzzer
+      buzzerSound.currentTime = 0; // Reset the buzzer to the beginning
+      setIsBuzzerPlaying(false); // Set buzzer playing to false
+    }
+  }, [currentSpeed, maxSpeed, buzzerSound, isBuzzerPlaying]);
 
   // Determine background color based on speed
   const backgroundColor = currentSpeed > maxSpeed ? '#ffcccc' : '#f0f0f0'; // Light red if exceeding speed limit, else light grey
