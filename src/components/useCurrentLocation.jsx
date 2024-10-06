@@ -4,8 +4,7 @@ function useCurrentLocation() {
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
-    speed: null,     // Speed in km/h
-    heading: null,   // Compass heading in degrees
+    speed: null, // Speed in km/h
   });
 
   useEffect(() => {
@@ -19,8 +18,7 @@ function useCurrentLocation() {
         setLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null, // Convert from m/s to km/h
-          heading: position.coords.heading !== null ? position.coords.heading : null // Use heading internally
+          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null // Convert m/s to km/h
         });
       },
       (error) => console.error("Error fetching location:", error),
@@ -31,7 +29,7 @@ function useCurrentLocation() {
       }
     );
 
-    return () => navigator.geolocation.clearWatch(watchId); // Clear geolocation on unmount
+    return () => navigator.geolocation.clearWatch(watchId); // Cleanup on unmount
   }, []);
 
   return location;
