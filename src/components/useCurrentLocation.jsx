@@ -5,6 +5,7 @@ function useCurrentLocation() {
     latitude: null,
     longitude: null,
     speed: null, // Speed in km/h
+    heading: null, // Add heading (compass direction)
   });
 
   useEffect(() => {
@@ -18,7 +19,8 @@ function useCurrentLocation() {
         setLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null // Convert m/s to km/h
+          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null, // Convert m/s to km/h
+          heading: position.coords.heading || null, // Include heading (compass direction)
         });
       },
       (error) => console.error("Error fetching location:", error),
