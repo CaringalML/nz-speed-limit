@@ -4,7 +4,8 @@ function useCurrentLocation() {
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
-    speed: null, // Add speed
+    speed: null,     // Speed in km/h
+    heading: null,   // Compass heading in degrees
   });
 
   useEffect(() => {
@@ -18,7 +19,8 @@ function useCurrentLocation() {
         setLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
-          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null // Convert from m/s to km/h and round to integer
+          speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null, // Convert from m/s to km/h
+          heading: position.coords.heading !== null ? position.coords.heading : "No heading available" // Compass heading in degrees
         });
       },
       (error) => console.error("Error fetching location:", error),
