@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useCurrentLocation from './useCurrentLocation';
 import axios from 'axios';
-import '../styles/SpeedLimit.css'; 
+import '../styles/SpeedLimit.css';
 
 function SpeedLimit() {
   const [speedLimit, setSpeedLimit] = useState(null);
@@ -33,34 +33,8 @@ function SpeedLimit() {
 
   useEffect(() => {
     if (location.latitude && location.longitude && isOnline) {
-      let adjustedLatitude = location.latitude;
-      let adjustedLongitude = location.longitude;
-
-      // Adjust the latitude/longitude based on heading if necessary
-      if (location.heading !== null) {
-        const offset = 0.0005; // Adjust this value based on desired precision (can vary)
-
-        if (location.heading >= 0 && location.heading <= 90) {
-          // Northeast
-          adjustedLatitude += offset;
-          adjustedLongitude += offset;
-        } else if (location.heading > 90 && location.heading <= 180) {
-          // Southeast
-          adjustedLatitude -= offset;
-          adjustedLongitude += offset;
-        } else if (location.heading > 180 && location.heading <= 270) {
-          // Southwest
-          adjustedLatitude -= offset;
-          adjustedLongitude -= offset;
-        } else if (location.heading > 270 && location.heading <= 360) {
-          // Northwest
-          adjustedLatitude += offset;
-          adjustedLongitude -= offset;
-        }
-      }
-
-      // Overpass API Query for Speed Limit based on adjusted location
-      const query = `[out:json];way(around:50,${adjustedLatitude},${adjustedLongitude})["maxspeed"];out;`;
+      // Overpass API Query for Speed Limit
+      const query = `[out:json];way(around:50,${location.latitude},${location.longitude})["maxspeed"];out;`;
       const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
 
       // Fetch Speed Limit Data
@@ -83,7 +57,7 @@ function SpeedLimit() {
         });
 
       // Nominatim API for reverse geocoding using adjusted coordinates
-      const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${adjustedLatitude}&lon=${adjustedLongitude}&format=json`;
+      const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${location.latitude}&lon=${location.longitude}&format=json`;
 
       axios.get(nominatimUrl)
         .then(response => {
@@ -136,7 +110,19 @@ function SpeedLimit() {
 
   return (
     <div className="speed-limit-container">
-      {/* Display content as before */}
+      <h1>Speed Limit</h1>
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Error: {speedLimit}</p>}
+      {!isLoading && !isError && (
+        <>
+          <p>Current Speed: {currentSpeed ? `${currentSpeed} km/h` : 'Unavailable'}</p>
+          <p>Speed Limit: {speedLimit ? `${speedLimit} km/h` : 'No Data'}</p>
+          <p>Road: {locationDetails.road}</p>
+          <p>Suburb: {locationDetails.suburb}</p>
+          <p>City: {locationDetails.city}</p>
+          <p>Zip: {locationDetails.zip}</p>
+        </>
+      )}
     </div>
   );
 }
