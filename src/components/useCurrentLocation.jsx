@@ -20,7 +20,7 @@ function useCurrentLocation() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
           speed: position.coords.speed ? Math.floor(position.coords.speed * 3.6) : null, // Convert from m/s to km/h
-          heading: position.coords.heading !== null ? position.coords.heading : "No heading available" // Compass heading in degrees
+          heading: position.coords.heading !== null ? position.coords.heading : null // Use heading internally
         });
       },
       (error) => console.error("Error fetching location:", error),
